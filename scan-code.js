@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const { getConfigUrl, taskId, contentType, token, resourcesDir, scanResultDir, maxWorkerNum } = require('./config');
 const { pullCode } = require('./pull-code');
 
-// 获取配置
+// 获取任务配置
 const getConfig = () => {
   return axios.post(getConfigUrl+'?id='+taskId, {}, {
     headers: {
@@ -20,34 +20,22 @@ const getConfig = () => {
   });
 }
 
-// 写入结果
-const writeLog = (log) => {
-  // 生成时间戳文件名
-  const timestamp = new Date();
-  const fileName = `${timestamp.getFullYear()}${(timestamp.getMonth() + 1).toString().padStart(2, '0')}${
-    timestamp.getDate().toString().padStart(2, '0')
-  }_${
-    timestamp.getHours().toString().padStart(2, '0')}${
-    timestamp.getMinutes().toString().padStart(2, '0')}${
-    timestamp.getSeconds().toString().padStart(2, '0')}`;
-
-  // 在日志内容中添加时间信息
-  const logContent = {
-    timestamp: timestamp.toISOString(),
-    ...log
-  };
-
-  // 确保日志目录存在
-  const logDir = path.join(__dirname, 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir);
+// 拉取代码
+const getCodes = async (taskConfig) => {
+  const repoConfigs = taskConfig.info.apps.map(app => ({
+    repo: app.repo,
+    branch: app.branch,
+    localPath: path.join(__dirname, resourcesDir)
+  }));
+  // console.info('repoConfigs:', JSON.stringify(repoConfigs));
+  const pullResult = await pullCode(repoConfigs);
+  // console.info('pull result:', pullResult);
+  // 如果拉取代码失败，则退出
+  if (pullResult.some(repo => repo.status === 'error')) {
+    console.error('repo', repo.name, 'pull code failed');
+    return false;
   }
-
-  // 写入日志文件
-  fs.writeFileSync(
-    path.join(logDir, `${fileName}.json`),
-    JSON.stringify(logContent, null, 2)
-  );
+  return true
 }
 
 // 获取commitId
@@ -56,7 +44,7 @@ const getCommitId = (appName) => {
 
   try {
     // 执行 git 命令获取最新的 commit ID
-    const commitId = execSync('git rev-parse HEAD', { cwd: appPath }).toString().trim();
+    const commitId = execSync('git rev-parse HEAD', { cwd: appPath }).toString().trim().slice(0, 8);
     return commitId;
   } catch (error) {
     console.error(`获取 ${appName} 的 commit ID 时发生错误:`, error);
@@ -93,6 +81,44 @@ const generateScanConfig = (taskConfig) => {
   }
 }
 
+// 写入扫描日志
+const writeLog = (taskConfig) => {
+  const log = taskConfig.info.apps.map(app => ({
+    appName: app.name,
+    commitId: getCommitId(app.name)
+  }));
+  // 生成时间戳文件名
+  const timestamp = new Date();
+  const fileName = `${timestamp.getFullYear()}${(timestamp.getMonth() + 1).toString().padStart(2, '0')}${
+    timestamp.getDate().toString().padStart(2, '0')
+  }_${
+    timestamp.getHours().toString().padStart(2, '0')}${
+    timestamp.getMinutes().toString().padStart(2, '0')}${
+    timestamp.getSeconds().toString().padStart(2, '0')}`;
+
+  // 在日志内容中添加时间信息
+  const scanInfo = {};
+  log.forEach(item => {
+    scanInfo[item.appName] = item.commitId;
+  });
+  const logContent = {
+    scanTime: fileName,
+    scanInfo
+  };
+
+  // 确保日志目录存在
+  const logDir = path.join(__dirname, 'logs');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir);
+  }
+
+  // 写入日志文件
+  fs.writeFileSync(
+    path.join(logDir, `${fileName}.json`),
+    JSON.stringify(logContent, null, 2)
+  );
+}
+
 // 开始扫描
 const startScan = async () => {
   try {
@@ -100,30 +126,15 @@ const startScan = async () => {
     const taskConfig = await getConfig();
     // console.info('config result:', JSON.stringify(taskConfig.info));
     // 2. 拉取代码
-    const repoConfigs = taskConfig.info.apps.map(app => ({
-      repo: app.repo,
-      branch: app.branch,
-      localPath: path.join(__dirname, resourcesDir)
-    }));
-    // console.info('repoConfigs:', JSON.stringify(repoConfigs));
-    const pullResult = await pullCode(repoConfigs);
-    console.info('pull result:', pullResult);
-    // 如果拉取代码失败，则退出
-    if (pullResult.some(repo => repo.status === 'error')) {
-      console.error('pull code failed:', pullResult);
-      return;
-    }
-    // 3. 扫描代码
+    const pullResult = await getCodes(taskConfig);
+    if (!pullResult) return;  // 拉取代码失败，退出
+    // 3. 扫描配置
     const scanConfig = generateScanConfig(taskConfig);
     // console.log('scan config:', JSON.stringify(scanConfig));
-    const result = await scan(scanConfig);
-    console.info('scan result:', result);
-    // 4. 写入日志
-    const log = taskConfig.info.apps.map(app => ({
-      appName: app.name,
-      commitId: getCommitId(app.name)
-    }));
-    writeLog(log);
+    // 4. 扫描代码
+    await scan(scanConfig);
+    // 5. 写入日志
+    writeLog(taskConfig);
   } catch (error) {
     console.error('task failed:', error);
   }

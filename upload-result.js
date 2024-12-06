@@ -23,7 +23,7 @@ const getCommitId = (appName) => {
   const appPath = path.join(__dirname, resourcesDir, appName);
   try {
     // 执行 git 命令获取最新的 commit ID
-    const commitId = execSync('git rev-parse HEAD', { cwd: appPath }).toString().trim().slice(0, 7);
+    const commitId = execSync('git rev-parse HEAD', { cwd: appPath }).toString().trim().slice(0, 8);
     return commitId;
   } catch (error) {
     console.error(`获取 ${appName} 的 commit ID 时发生错误:`, error);
@@ -86,14 +86,14 @@ const formatResult = (config, result) => {
 
 // 开始上传
 const startUpload = async () => {
-  // 获取配置
+  // 1. 获取配置
   const config = await getConfig();
-  // 读取结果
+  // 2. 读取结果
   const result = fs.readFileSync(path.join(__dirname, 'scan-results/manifest.json'), 'utf8');
-  // 格式结果 
+  // 3. 格式结果 
   const formattedResult = formatResult(config, JSON.parse(result));
   // console.log('formatted result:', formattedResult);
-  // 上传结果
+  // 4. 上传结果
   await uploadResult(formattedResult);
 }
   

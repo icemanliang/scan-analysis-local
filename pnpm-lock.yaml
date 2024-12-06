@@ -12,8 +12,8 @@ importers:
         specifier: ^1.7.7
         version: 1.7.9
       scan-analysis-lib:
-        specifier: ^0.7.0
-        version: 0.7.0(@babel/core@7.26.0)
+        specifier: ^0.8.0
+        version: 0.8.0(@babel/core@7.26.0)
 
 packages:
 
@@ -1952,8 +1952,8 @@ packages:
     resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==, tarball: https://registry.npmjs.org/safe-stable-stringify/-/safe-stable-stringify-2.5.0.tgz}
     engines: {node: '>=10'}
 
-  scan-analysis-lib@0.7.0:
-    resolution: {integrity: sha512-p9hu2uX+GmNI8IvKkZMIPFxg4FE7lNDyqd03D/iBoi3hxp3MS3t7WGrg2FjozYDL4eY/hMQpekOk/nC5aKA8ww==, tarball: https://registry.npmjs.org/scan-analysis-lib/-/scan-analysis-lib-0.7.0.tgz}
+  scan-analysis-lib@0.8.0:
+    resolution: {integrity: sha512-tYWBbOpMAgsNbZh1yyQVSOkW0njIiYDhDHGXNHR3NTAn3wiFpp31ppGWB9yyzc8h1TMkRUJJnrfgVItb3arPjw==, tarball: https://registry.npmjs.org/scan-analysis-lib/-/scan-analysis-lib-0.8.0.tgz}
     hasBin: true
 
   semver@5.7.2:
@@ -4542,7 +4542,7 @@ snapshots:
 
   safe-stable-stringify@2.5.0: {}
 
-  scan-analysis-lib@0.7.0(@babel/core@7.26.0):
+  scan-analysis-lib@0.8.0(@babel/core@7.26.0):
     dependencies:
       '@babel/eslint-parser': 7.25.9(@babel/core@7.26.0)(eslint@8.57.1)
       '@babel/parser': 7.26.3

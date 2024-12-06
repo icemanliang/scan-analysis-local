@@ -13,6 +13,6 @@
   "packageManager": "pnpm@9.6.0",
   "dependencies": {
     "axios": "^1.7.7",
-    "scan-analysis-lib": "^0.7.0"
+    "scan-analysis-lib": "^0.8.0"
   }
 }
