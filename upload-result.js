@@ -19,8 +19,8 @@ const getConfig = () => {
   });
 }
 // 获取commitId
-const getCommitId = (appName) => {
-  const appPath = path.join(__dirname, resourcesDir, appName);
+const getCommitId = (appName, repoName) => {
+  const appPath = path.join(__dirname, resourcesDir, repoName);
   try {
     // 执行 git 命令获取最新的 commit ID
     const commitId = execSync('git rev-parse HEAD', { cwd: appPath }).toString().trim().slice(0, 8);
@@ -75,7 +75,7 @@ const formatResult = (config, result) => {
       app_id: getAppId(config, appResult.appName),
       cost_time: appResult.duration,
       app_log: logContent,
-      commit_id: getCommitId(getRepoName(config, appResult.appName)),
+      commit_id: getCommitId(appResult.appName, getRepoName(config, appResult.appName)),
       result_json: resultContent
     };
     scanResults.app_results.push(zipResult);

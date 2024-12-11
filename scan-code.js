@@ -35,12 +35,13 @@ const getCodes = async (taskConfig) => {
     console.error('repo', repo.name, 'pull code failed');
     return false;
   }
+  console.info('pull code all success');
   return true
 }
 
 // 获取commitId
-const getCommitId = (appName) => {
-  const appPath = path.join(__dirname, resourcesDir, appName);
+const getCommitId = (appName, repoName) => {
+  const appPath = path.join(__dirname, resourcesDir, repoName);
 
   try {
     // 执行 git 命令获取最新的 commit ID
@@ -55,10 +56,11 @@ const getCommitId = (appName) => {
 // 解析JS对象
 const parseJsObject = (str) => {
   try {
-      return (new Function(`return ${str}`))();
+    return (new Function(`return ${str}`))();
   } catch (error) {
-      console.error('解析配置对象失败:', error);
-      return {};
+    console.info('解析配置:', str);
+    console.error('解析配置对象失败:', error);
+    return {};
   }
 }
 
@@ -85,7 +87,7 @@ const generateScanConfig = (taskConfig) => {
 const writeLog = (taskConfig) => {
   const log = taskConfig.info.apps.map(app => ({
     appName: app.name,
-    commitId: getCommitId(app.name)
+    commitId: getCommitId(app.name, app.repo.split('/').pop().replace('.git', ''))
   }));
   // 生成时间戳文件名
   const timestamp = new Date();
