@@ -6,6 +6,13 @@ const { execSync } = require('child_process');
 const { getConfigUrl, taskId, contentType, token, resourcesDir, scanResultDir, maxWorkerNum } = require('./config');
 const { pullCode } = require('./pull-code');
 
+// 清理目录
+const cleanDir = () => {
+  if (fs.existsSync(path.join(__dirname, scanResultDir))) {
+    fs.rmSync(path.join(__dirname, scanResultDir), { recursive: true, force: true });
+  }
+}
+
 // 获取任务配置
 const getConfig = () => {
   return axios.post(getConfigUrl+'?id='+taskId, {}, {
@@ -74,7 +81,8 @@ const generateScanConfig = (taskConfig) => {
       baseDir: path.join(__dirname, `${resourcesDir}/${app.repo.split('/').pop().replace('.git', '')}`),
       codeDir: parseJsObject(app.config).codeDir,
       buildDir: parseJsObject(app.config).buildDir,
-      aliasConfig: parseJsObject(app.config).aliasConfig
+      aliasConfig: parseJsObject(app.config).aliasConfig,
+      subDirs: parseJsObject(app.config).subDirs || []
     })),
     plugins: taskConfig.info.plugins.map(plugin => ({
       name: plugin.name,
@@ -124,6 +132,8 @@ const writeLog = (taskConfig) => {
 // 开始扫描
 const startScan = async () => {
   try {
+    // 0. 清理目录
+    cleanDir();
     // 1. 获取配置
     const taskConfig = await getConfig();
     // console.info('config result:', JSON.stringify(taskConfig.info));
