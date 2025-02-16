@@ -11,9 +11,15 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.7.9
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       scan-analysis-lib:
-        specifier: ^1.4.0
-        version: 1.4.0(@babel/core@7.26.0)
+        specifier: ^1.5.0
+        version: 1.5.0(@babel/core@7.26.0)
+      simple-git:
+        specifier: ^3.27.0
+        version: 3.27.0
 
 packages:
 
@@ -903,6 +909,11 @@ packages:
   cosmiconfig@7.1.0:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==, tarball: https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-7.1.0.tgz}
     engines: {node: '>=10'}
+
+  cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==, tarball: https://registry.npmjs.org/cross-env/-/cross-env-7.0.3.tgz}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==, tarball: https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz}
@@ -1952,8 +1963,8 @@ packages:
     resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==, tarball: https://registry.npmjs.org/safe-stable-stringify/-/safe-stable-stringify-2.5.0.tgz}
     engines: {node: '>=10'}
 
-  scan-analysis-lib@1.4.0:
-    resolution: {integrity: sha512-eKoPqbOVDS7BjNWsOEJ1bzLagqoHOc1R94ipP7LI7pOy4f0+hArQb1W6PR6LM+qpSnbu+VL179SmQag3QPDsmw==, tarball: https://registry.npmjs.org/scan-analysis-lib/-/scan-analysis-lib-1.4.0.tgz}
+  scan-analysis-lib@1.5.0:
+    resolution: {integrity: sha512-FBwL7HAC3X85HO6Yg/V9jv04OqPOJBYR4YY9Z6ILGL7DGfTAy20Qw0/sc+tVVDQ7xI8NIga2ewg3D6KI4c4gsA==, tarball: https://registry.npmjs.org/scan-analysis-lib/-/scan-analysis-lib-1.5.0.tgz}
     hasBin: true
 
   semver@5.7.2:
@@ -3399,6 +3410,10 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.2
 
+  cross-env@7.0.3:
+    dependencies:
+      cross-spawn: 7.0.6
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -4542,7 +4557,7 @@ snapshots:
 
   safe-stable-stringify@2.5.0: {}
 
-  scan-analysis-lib@1.4.0(@babel/core@7.26.0):
+  scan-analysis-lib@1.5.0(@babel/core@7.26.0):
     dependencies:
       '@babel/eslint-parser': 7.25.9(@babel/core@7.26.0)(eslint@8.57.1)
       '@babel/parser': 7.26.3

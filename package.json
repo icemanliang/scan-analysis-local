@@ -4,15 +4,23 @@
   "description": "scan-analysis-local",
   "main": "index.js",
   "scripts": {
-    "scan": "node --max-old-space-size=8192 ./scan-code.js",
-    "upload": "node ./upload-result.js"
+    "scan:prod": "cross-env origin=https://iceman.analysis.cn --max-old-space-size=8192 node ./scan-code.js",
+    "upload:prod": "cross-env origin=https://iceman.analysis.cn node ./upload-result.js",
+    "scan:local": "cross-env origin=http://localhost:3000 --max-old-space-size=8192 node ./scan-code.js",
+    "upload:local": "cross-env origin=http://localhost:3000 node ./upload-result.js"
   },
-  "keywords": ["scan", "analysis", "local"],
+  "keywords": [
+    "scan",
+    "analysis",
+    "local"
+  ],
   "author": "icemanliang",
   "license": "MIT",
   "packageManager": "pnpm@9.6.0",
   "dependencies": {
     "axios": "^1.7.7",
-    "scan-analysis-lib": "^1.4.0"
+    "cross-env": "^7.0.3",
+    "scan-analysis-lib": "^1.5.0",
+    "simple-git": "^3.27.0"
   }
 }

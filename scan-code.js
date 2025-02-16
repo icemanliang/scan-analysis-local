@@ -15,7 +15,9 @@ const cleanDir = () => {
 
 // 获取任务配置
 const getConfig = () => {
-  return axios.post(getConfigUrl+'?id='+taskId, {}, {
+  return axios.post(getConfigUrl, {
+    id: taskId
+  }, {
     headers: {
       'Content-Type': contentType,
       'x-token': token

@@ -1,14 +1,14 @@
 module.exports = {
   // 任务id
-  taskId: '6',
+  taskId: '1',
   // 任务code
-  taskCode: 'xxx',
+  taskCode: 'jdiaofwwew',
   // 令牌
-  token: 'xxx',
+  token: 'your-secret-token',
   // 获取配置地址
-  getConfigUrl: 'http://iceman.analysis.cn/analysis/task',
+  getConfigUrl: `${process.env.origin}/api/task/getById`,
   // 上传结果地址
-  uploadUrl: 'http://iceman.analysis.cn/analysis/result/sync',
+  uploadUrl: `${process.env.origin}/api/result/sync`,
   // 上传结果contentType
   contentType: 'application/json; charset=utf-8',
   // 结果目录
