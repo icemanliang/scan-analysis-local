@@ -38,7 +38,9 @@ const uploadResult = (result) => {
     headers: {
       'Content-Type': contentType,
       'x-token': token
-    }
+    },
+    maxContentLength: Infinity,   // 解决上传结果过大问题
+    maxBodyLength: Infinity       // 解决上传结果过大问题
   }).then((res) => {
     console.log('upload result:', res.data);
   }).catch((error) => {
@@ -56,7 +58,8 @@ const getRepoName = (config, name) => {
 }
 // 压缩结果
 const zip = (filePath) => {
-  const zipBuffer = zlib.gzipSync(fs.readFileSync(filePath, 'utf8'));
+  // 压缩结果, 压缩级别为9, 最高压缩级别
+  const zipBuffer = zlib.gzipSync(fs.readFileSync(filePath, 'utf8'), { level: 9 });
   return zipBuffer.toString('base64');
 }
 // 格式结果
