@@ -15,7 +15,7 @@ const getConfig = () => {
       'x-token': token
     }
   }).then((res) => {
-    return res.data;
+    return res.data.data;
   }).catch((error) => {
     console.error('upload failed:', error);
   });
@@ -49,11 +49,11 @@ const uploadResult = (result) => {
 }
 // 获取appId
 const getAppId = (config, name) => {
-  return config.info.apps.find(app => app.name === name).id;
+  return config.apps.find(app => app.name === name).id;
 }
 // 获取repoName
 const getRepoName = (config, name) => {
-  const repo = config.info.apps.find(app => app.name === name).repo;
+  const repo = config.apps.find(app => app.name === name).repo;
   return repo.split('/').pop().replace('.git', '');
 }
 // 压缩结果

@@ -1,8 +1,8 @@
 module.exports = {
   // 任务id
-  taskId: '1',
+  taskId: '37',
   // 任务code
-  taskCode: 'jdiaofwwew',
+  taskCode: '4bac3fs57-50k0-4b4d-bdc4-bc1fd56e7679',
   // 令牌
   token: 'your-secret-token',
   // 获取配置地址

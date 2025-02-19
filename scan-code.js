@@ -23,15 +23,15 @@ const getConfig = () => {
       'x-token': token
     }
   }).then((res) => {
-    return res.data;
+    return res.data.data;
   }).catch((error) => {
-    console.error('upload failed:', error);
+    console.error('get config failed:', error);
   });
 }
 
 // 拉取代码
 const getCodes = async (taskConfig) => {
-  const repoConfigs = taskConfig.info.apps.map(app => ({
+  const repoConfigs = taskConfig.apps.map(app => ({
     repo: app.repo,
     branch: app.branch,
     localPath: path.join(__dirname, resourcesDir)
@@ -78,7 +78,7 @@ const generateScanConfig = (taskConfig) => {
   return {
     resultDir: scanResultDir,
     maxWorkerNum,
-    sources: taskConfig.info.apps.map(app => ({
+    sources: taskConfig.apps.map(app => ({
       appName: app.name,
       baseDir: path.join(__dirname, `${resourcesDir}/${app.repo.split('/').pop().replace('.git', '')}`),
       codeDir: parseJsObject(app.config).codeDir,
@@ -86,7 +86,7 @@ const generateScanConfig = (taskConfig) => {
       aliasConfig: parseJsObject(app.config).aliasConfig,
       subDirs: parseJsObject(app.config).subDirs || []
     })),
-    plugins: taskConfig.info.plugins.map(plugin => ({
+    plugins: taskConfig.plugins.map(plugin => ({
       name: plugin.name,
       config: parseJsObject(plugin.config)
     }))
@@ -95,7 +95,7 @@ const generateScanConfig = (taskConfig) => {
 
 // 写入扫描日志
 const writeLog = (taskConfig) => {
-  const log = taskConfig.info.apps.map(app => ({
+  const log = taskConfig.apps.map(app => ({
     appName: app.name,
     commitId: getCommitId(app.name, app.repo.split('/').pop().replace('.git', ''))
   }));
@@ -141,7 +141,7 @@ const startScan = async () => {
     // console.info('config result:', JSON.stringify(taskConfig.info));
     // 2. 拉取代码
     const pullResult = await getCodes(taskConfig);
-    if (!pullResult) return;  // 拉取代码失败，退出
+    if (!pullResult) throw new Error('pull code failed');  // 拉取代码失败，退出
     // 3. 扫描配置
     const scanConfig = generateScanConfig(taskConfig);
     // console.log('scan config:', JSON.stringify(scanConfig));
