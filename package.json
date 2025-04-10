@@ -18,9 +18,11 @@
   "license": "MIT",
   "packageManager": "pnpm@9.6.0",
   "dependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
     "axios": "^1.7.7",
     "cross-env": "^7.0.3",
-    "scan-analysis-lib": "^2.0.1",
+    "scan-analysis-lib": "^2.1.1",
     "simple-git": "^3.27.0"
   }
 }
